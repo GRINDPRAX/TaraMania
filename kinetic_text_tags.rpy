@@ -1,46 +1,3 @@
-"""
- Kinetic Text Tags Ren'Py Module
- 2021 Daniel Westfall <SoDaRa2595@gmail.com>
-
- http://twitter.com/sodara9
- I'd appreciate being given credit if you do end up using it! :D Would really
- make my day to know I helped some people out!
- Really hope this can help the community create some really neat ways to spice
- up their dialogue!
- http://opensource.org/licenses/mit-license.php
- Github: https://github.com/SoDaRa/Kinetic-Text-Tags
- itch.io: https://wattson.itch.io/kinetic-text-tags
- Forum Post: https://lemmasoft.renai.us/forums/viewtopic.php?f=51&t=60527&sid=75b4eb1aa5212a33cbfe9b0354e5376b
-"""
-# Permission is hereby granted, free of charge, to any person
-# obtaining a copy of this software and associated documentation files
-# (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge,
-# publish, distribute, sublicense, and/or sell copies of the Software,
-# and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-### UPDATE ###
-# With the new ATL text tag, a handful of effects I've made have become redundant.
-# Namely the bounce (bt), fadein (fi) and rotation (rotat) effects.
-# However, I'll leave them in here for posterity and in case someone would like
-# to reuse some of the code for whatever purpose.
-# Plus the bounce and fadein may be faster to type for some. And I'd probably
-# break some code if I did. Though feel free to remove them if you find them
-# to be clutter.
-
-##### Our preference to disable the chaos text #####
 default preferences.chaos_on = False  # You can change this to be gui.chaos_text or persistent.chaos_text if you'd prefer.
 
 init python:
@@ -245,8 +202,8 @@ init python:
     class ChaosText(renpy.Displayable):
         # Some may want to have this list be more of a global variable than baked into the class.
         font_list = ["FOT-PopJoyStd-B.otf", "GrenzeGotisch-VariableFont_wght.ttf", "Pacifico-Regular.ttf", "RobotoSlab-ExtraBold.ttf",\
-                     "RobotoSlab-Medium.ttf", "SyneTactile-Regular.ttf", "TurretRoad-Bold.ttf", "TurretRoad-ExtraBold.ttf", "TurretRoad-ExtraLight.ttf", \
-                     "TurretRoad-Light.ttf", "TurretRoad-Medium.ttf", "TurretRoad-Regular.ttf"]
+                    "RobotoSlab-Medium.ttf", "SyneTactile-Regular.ttf", "TurretRoad-Bold.ttf", "TurretRoad-ExtraBold.ttf", "TurretRoad-ExtraLight.ttf", \
+                    "TurretRoad-Light.ttf", "TurretRoad-Medium.ttf", "TurretRoad-Regular.ttf"]
         #Just a list so we can pull any hex value randomly
         color_choice = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]
         def __init__(self, orig_text, **kwargs):
@@ -502,8 +459,8 @@ init python:
                         speed = float(arg[1:])
 
         char_offset = 0  # Since we want our text to move in a wave,
-                         # we want to let each character know where it is in the wave.
-                         # So they move in harmony. Otherwise they rise and fall all together.
+                    # we want to let each character know where it is in the wave.
+                    # So they move in harmony. Otherwise they rise and fall all together.
         my_style = DispTextStyle() # This will keep track of what tags and styling to add to each letter
         for kind,text in contents:
             if kind == renpy.TEXT_TEXT:
@@ -717,20 +674,20 @@ init python:
     # This tag is made to automatically wrap several Classes inside one another
     # This is to reduce strain on the render pipeline and memory from nested classes
     # Notes:
-      # GradientText and GlitchText are omitted because they were made after the 1.0 release.
-      # SwapText and MoveText are omitted for possible issues.
-      # SwapText because is not included in this due to it replacing whole sections rather than
-      # individual letters. Would be better to embed an Omega inside a SwapText.
-      # MoveText because of potential issues of having things like BounceText affect
-      # affecting the position of the letter visually.
-      # Would be better to have an event call attached to one of those so it can account
-      # for the transformations of other tags
+    # GradientText and GlitchText are omitted because they were made after the 1.0 release.
+    # SwapText and MoveText are omitted for possible issues.
+    # SwapText because is not included in this due to it replacing whole sections rather than
+    # individual letters. Would be better to embed an Omega inside a SwapText.
+    # MoveText because of potential issues of having things like BounceText affect
+    # affecting the position of the letter visually.
+    # Would be better to have an event call attached to one of those so it can account
+    # for the transformations of other tags
     # Argument Notes (all tag args accept same arguments as original tag):
-      # BT: BounceText
-      # SC: ScareText
-      # FI: FadeInText
-      # ROT: RotateText
-      # CH: ChaosText
+    # BT: BounceText
+    # SC: ScareText
+    # FI: FadeInText
+    # ROT: RotateText
+    # CH: ChaosText
     # All tag arguments are seperated by @.
     # Example: {omega=BT=[bt_arg]@SC=[sc_arg]@FI=[fi_arg1]-[fi_arg2]@ROT=[rot_arg]@CH}Text{/omega}
     def omega_tag(tag, argument, contents):

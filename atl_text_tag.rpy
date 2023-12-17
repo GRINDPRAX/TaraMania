@@ -1,85 +1,3 @@
-"""
- ATL Text Tags Ren'Py Module
- 2021 Daniel Westfall <SoDaRa2595@gmail.com>
-
- http://twitter.com/sodara9
- I'd appreciate being given credit if you do end up using it! :D Would really
- make my day to know I helped some people out!
- Really hope this can help the community create some really neat ways to spice
- up their dialogue!
- http://opensource.org/licenses/mit-license.php
- Forum Post: https://lemmasoft.renai.us/forums/viewtopic.php?f=51&t=60527&sid=75b4eb1aa5212a33cbfe9b0354e5376b
- Github: https://github.com/SoDaRa/Kinetic-Text-Tags
- itch.io: https://wattson.itch.io/kinetic-text-tags
-"""
-# Permission is hereby granted, free of charge, to any person
-# obtaining a copy of this software and associated documentation files
-# (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge,
-# publish, distribute, sublicense, and/or sell copies of the Software,
-# and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-# General Notes:
- # I have not tested every transform property and such some may not work as indended
-    # Most common ones work fine such as pos and offset.
-    # I can't imagine this being an issue for most of them. However I imagine that
-    # anchor, xanchor, yanchor, fit and events may not have the indended effect.
-
- # Tranforms used for ATLText must take up time if they repeat
-    # The following will cause an error:
-    # transform random_pos(range):
-    #     xpos (random.random() * range)
-    #     ypos (random.random() * range)
-    #     # If there were a pause 0.01 here, it'd be fine. w/o it, renpy flags this as an infinite loop.
-    #     repeat
-
- # Sadly, repeating a section a limited number of times does not work.
-    # As an example:
-    # transform text_rotate_3d(time=1.5):
-    #     matrixanchor (0.5,0.5)
-    #     matrixtransform RotateMatrix(0,0,0) * OffsetMatrix(0,0,100)
-    #     linear time matrixtransform RotateMatrix(180,0,180) * OffsetMatrix(0,0,100)
-    #     linear time matrixtransform RotateMatrix(360,0,360) * OffsetMatrix(0,0,100)
-    #     matrixtransform RotateMatrix(0,0,0) * OffsetMatrix(0,0,100)
-    #     repeat 3
-    #     matrixtransform RotateMatrix(0,0,0) * OffsetMatrix(0,0,100)
-    #     linear time matrixtransform RotateMatrix(180,0,180) * OffsetMatrix(0,0,50)
-    #     linear time matrixtransform RotateMatrix(360,0,360) * OffsetMatrix(0,0,0)
-    # The 'repeat 3' will be skipped and instead just fall through into the next section.
-    # Thus, repeated sections must be included manually. Which sucks but idk a way
-    # around it right now.
-    # Thankfully, infinite repeats work without issue.
-
- # Using matrixtransform and zpos is possible. However, standard text is applied on
-    # the screens layer. Using:
-    # camera screens:
-    #     perspective True
-    # Will enable that layer to use the 3D stage.
-    # HOWEVER!!!
-    # Doing so will prevent the user from being able to interact with any buttons
-    # on that layer. Therefore, it is advised that if you want to use the 3D stage
-    # for text transforms, you have it be handled on a layer.
-    # Below is an example of how to implement this.
-
-# While making this I frequently had the source code up for things
-  # Relevant bits to look over were:
-  # defaultstore.rpy for how At() works
-  # display/motion.py for how various kinda of movement are handled
-  # display/transform.py for the TransformState, Tranform and ATLTransform classes
-  # atl.py for ATLTransformBase class, which handles a lot of functions for ATLTransform
-  # display/accelerator.pyx for how Tranform handles rendering.
 transform bounce:
     ease 0.5 yoffset 10 matrixcolor TintMatrix("#f00")
     ease 0.5 yoffset -10 matrixcolor TintMatrix("#00f")
@@ -106,19 +24,7 @@ transform fade_in_text(time=0.5, distance=20):
     alpha 0 xoffset distance
     ease time alpha 1 xoffset 0
 
-# Doing the following will help with using 3D stage transforms on say screen text
-  # Defining the new layer below the screens layer to allow it to go behind anything on the screens layer
-# define config.layers = [ 'master', 'transient', 'threeD_text', 'screens', 'overlay' ]
-  # Tell the character to use our new layer to display the screen.
-# define e_3d = Character("Eileen3D", show_layer="threeD_text")
-  # And before using the character, be sure to do:
-  # camera threeD_text:
-  #     perspective True
-  # And the 3D stage things should work.
-  # You can also make this layer the default for showing the say screen by doing.
-  # define config.say_layer = "threeD_text"
-  # Also remember you can override elements of a character for a line, such as with:
-    # "Here's a narration line with an override to {atl=-0.1, text_rotate_3d}allow for 3D Text.{/atl}" (show_layer="threeD_text")
+
 transform text_rotate_3d(time=1.5):
     matrixanchor (0.5,0.5)
     matrixtransform RotateMatrix(0,0,0) * OffsetMatrix(0,0,100)
@@ -134,20 +40,10 @@ init python:
             self.child = At(child, *transforms)
             self.offset = offset
             self.hold = hold
-              # If your ATL uses 2+ contains for a character to be used twice, then
-              # a fixed is made to contain them. During rendering, this can lead
-              # to a render that is far larger than the actual character's render.
-              # To combat this, I'm having it check the original Text's render size
-              # so we can use that instead. This shouldn't have many consequences,
-              # but if you observe something weird, maybe try removing the below and
-              # using the child render's size in the render function
+
             child_render = renpy.render(child, 0, 0, 0, 0)
             self.width, self.height = child_render.get_size()
-             # Because of how renpy handles transforms on screens in 7.4.7, we
-             # have to update the internals of the transform to get the appropriate
-             # time on it. Otherwise our offset won't have the correct effect.
-             # If you're using Renpy 7.4.6 or below and this causes issues, you
-             # can remove this bit.
+
             if config.atl_start_on_show:
                 renpy.render(self.child, 0, 0, 0, 0)
 
@@ -238,14 +134,14 @@ init python:
         time_offset = 0
         hold = False
         # Check for an offset
-          # See if we want to use the current cps settings
+
         if arg_list[0] == "#" or arg_list[0] == "-#":
             if preferences.text_cps is not 0:
                 time_offset = (1.0 / preferences.text_cps)
                 if arg_list[0] == "-#":
                     time_offset = time_offset * -1.0
             arg_list.pop(0)
-          # Attempt checking if the first parameter is a float.
+
         else:
             try:
                 time_offset = float(arg_list[0])
@@ -297,8 +193,7 @@ init python:
         # Setup char_index
         char_index = 0
         count_back = False # Used to know if we count forwards or backwards
-          # If offset is negative and we aren't holding time at zero, count
-          # the number of characters so char_index can count down to 0.
+
         if time_offset < 0 and not hold:
             for kind,text in contents:
                 if kind == renpy.TEXT_TEXT:
@@ -317,9 +212,7 @@ init python:
                 for char in text:
                     char_text = Text(my_style.apply_style(char))
                     if atl_list == False:
-                          # If we got a false earlier, then we know we want to call
-                          # one of the transforms with the text character as a parameter
-                          # so we generate the atl_list necessary for each character.
+
                         new_atl_list = arg_handler(arg_list, char_text)
                         char_disp = ATLText(char_text, new_atl_list, char_index * time_offset, hold)
                     else:

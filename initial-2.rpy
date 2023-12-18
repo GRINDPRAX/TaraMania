@@ -2,7 +2,7 @@ init 900 python:
 
     initial_mod(
         "Taramania",
-        "0.0.8d",
+        "0.0.9d",
         "pon",
         "https://t.me/taramaniasg"
     )
@@ -118,7 +118,6 @@ init 900 python:
 init python hide:
     namemap = renpy.game.script.namemap
     namemap["new_neighborn"] = namemap["new_neighborn_mod"]
-
 
 
 

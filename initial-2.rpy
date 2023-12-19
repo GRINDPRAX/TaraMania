@@ -2,7 +2,7 @@ init 900 python:
 
     initial_mod(
         "Taramania",
-        "0.0.9d",
+        "0.0.11d_test",
         "pon",
         "https://t.me/taramaniasg"
     )
@@ -14,6 +14,8 @@ init 900 python:
     date_w_ghost = False # знаком с приведением?
     date_w_killer = False # знаком с киллером?
     date_w_tarakan = False  # тут False должно быть   ---- знаком с тараканом?
+    tar_speech_a_ghost = False
+
 
     tarakan_respect = 0    # респект от таракана
     npc_loc = 0     # локация нпс за которым следит таракан
@@ -97,6 +99,13 @@ init 900 python:
     )
 
 
+    #рассказывает таракану о девочке призраке
+    check_ivent(
+        "location_gg == 'home' and date_w_ghost == True and tar_speech_a_ghost == False and tar_loc == 'home'",
+        "tarakan_speech_about_ghost2"
+    )
+
+
 
 
     add_button_in_activity_category(
@@ -121,6 +130,7 @@ init python hide:
 
 
 
+
 init:
 
 
@@ -129,6 +139,8 @@ init:
     define killer = Character(_("Маньяк"), color=Color("#f50505"), who_font= 'gui/fonts/calibri_bold.ttf')
 
     define ghost = Character(_("Призрак"), who_color="#f906d0ff", who_font='gui/fonts/calibri_bold.ttf')
+
+    image ggrltest = "modifications/TaraMania/images/_ggrltest.png"
 
 
     $ id_npc = 'npc1048'
@@ -151,54 +163,78 @@ label cringesuka456tarakan_dialog:
 
         tar_pers "Я к вашим услугам, [player_name]"
 
-        menu:
-            "{color=#000000} Болтать\n{size=21}{i}+1 респект таракана{/i}{/size}{/color}":
+        
+        if tar_speech_a_ghost == True:
+            menu:
 
-                if tarakan_can_diialog >= 1:
-                    $ tarakan_respect +=1
+                "{color=#000000} Болтать\n{size=21}{i}+1 респект таракана{/i}{/size}{/color}":
 
-                elif tarakan_can_diialog <0:
-                    tar_pers "Да ты заебал уже"
-                    tar_pers "Ладно..."
-                $ tarakan_can_diialog -= 1
-                menu:
+                    if tarakan_can_diialog >= 1:
+                        $ tarakan_respect +=1
+
+                    elif tarakan_can_diialog <0:
+                        tar_pers "Да ты заебал уже"
+                        tar_pers "Ладно..."
+                    $ tarakan_can_diialog -= 1
+
+                    menu:
                     "{color=#000000} Поговорить о криминале{/color}":
 
                         $ repl = renpy.random.choice(cr_facts)
                         tar_pers "[repl]"
 
-
+                        jump check_location
 
                     "{color=#000000} Поговорить о философии{/color}":
 
                         $ repl = renpy.random.choice(fil_citats)
                         tar_pers "[repl]"
 
+                        jump check_location
 
 
-                jump check_location
 
-            "{color=#000000} Проследи за...\n{size=21}{i}-1 респект таракана{/i}{/size}{/color}":
-                $ tarakan_respect -=1
-                label  spy_tar_npc:
-                    $ pers = int(renpy.input("id того, за кем следить...", default =_("1"), allow="1234567890", length=3))
-                    if number_npc <= 0 or number_npc >= number_npc_max:
-                        "неверный id персонажа"
-                        jump spy_tar_npc
+                "{color=#000000}Спросить про Юмико{size=21}{i}...{/i}{/size}{/color}":
 
-                $ test = pers
-                $ test = "npc" + str(test)
+                    "in processing"
+                    jump check_location
 
-                $ npc_loc = eval(test)['location_npc']
-                $ npc_name = eval(test)['npc_name']
+        else:
 
-                glgg "Проследи за [npc_name]"
-                $ tar_loc = npc_loc
+            menu:
+                "{color=#000000} Болтать\n{size=21}{i}+1 респект таракана{/i}{/size}{/color}":
 
-                tar_pers "Слушаюсь, сударь"
+                    if tarakan_can_diialog >= 1:
+                        $ tarakan_respect +=1
 
-                jump check_location
+                    elif tarakan_can_diialog <0:
+                        tar_pers "Да ты заебал уже"
+                        tar_pers "Ладно..."
+                    $ tarakan_can_diialog -= 1
 
+                    menu:
+                    "{color=#000000} Поговорить о криминале{/color}":
+
+                        $ repl = renpy.random.choice(cr_facts)
+                        tar_pers "[repl]"
+
+                        jump check_location
+
+                    "{color=#000000} Поговорить о философии{/color}":
+
+                        $ repl = renpy.random.choice(fil_citats)
+                        tar_pers "[repl]"
+
+                        jump check_location
+
+                
+                
+                    
+                    
+                
+
+                        
+                        
 
     elif date_w_tarakan == False:
 
@@ -324,80 +360,121 @@ label date_ghost_label:
 
 
     "Я долго ходил по лесу в поисках чего-то непонятного, пока не услышал чей-то голос."
-    ghost "{size=60}{glitch=60}У-у-у-у{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}У-у-у-у{/glitch}{/size}"
     "Я резко обернулся и увидел там..."
     #glgg "{sc=2}ПРИЗРАК?!{/sc}"
     glgg "ПРИЗРАК?!"
+    show ggrltest with dissolve 
     "Передо мной парил в воздухе силуэт молодой девушки в белом платье. Ее черные, как ночь, глаза смотрели прямо мне в душу."
-    ghost "{size=60}{glitch=60}Ты меня видишь?{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Ты меня видишь?{/glitch}{/size}"
     glgg "ПРОШУ, НЕ УБИВАЙ!"
-    ghost "{size=60}{glitch=60}...{/glitch}{/size}"
-    ghost "{size=60}{glitch=60}Ты идиот?{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}...{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Ты идиот?{/glitch}{/size}"
     "Не понял. Она что не убьет меня?"
-    ghost "{size=60}{glitch=60}Я не могу никого убить, даже если очень сильно захочу, так что не бойся меня.{/glitch}{/size}"
-    ghost "{size=60}{glitch=60}Я всего лишь девушка, что умерла пару лет назад{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Я не могу никого убить, даже если очень сильно захочу, так что не бойся меня.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Я всего лишь девушка, что умерла пару лет назад{/glitch}{/size}"
     glgg "..."
-    ghost "{size=60}{glitch=60}Так что ты забыл в лесу, так еще и в такое время?{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Так что ты забыл в лесу, так еще и в такое время?{/glitch}{/size}"
     glgg "Честно говоря, я и сам не знаю. В лесу мне нужно найти то, сам не знаю что."
-    ghost "{size=60}{glitch=60}А по-подробнее?{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}А по-подробнее?{/glitch}{/size}"
     glgg "В городе завелся маньяк, и один мой... друг? Сказал, что он частенько ходит в лес, поэтому я и подумал, что смогу найти здесь хоть что-то, что поможет мне избавиться от этого мерзавца."
-    ghost "{size=60}{glitch=60}Так значит его еще не поймали...{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Так значит его еще не поймали...{/glitch}{/size}"
     glgg "Всмысле? Ты его знаешь?"
-    ghost "{size=60}{glitch=60}Да...{/glitch}{/size}"
-    ghost "{size=60}{glitch=60}Это он убил меня.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Да...{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Это он убил меня.{/glitch}{/size}"
     glgg "Да ну нахуй."
-    ghost "{size=60}{glitch=60}...{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}...{/glitch}{/size}"
     glgg "Извини, просто удивился. Так получается ты можешь мне помочь избавиться от него?"
-    ghost "{size=60}{glitch=60}Думаю, что да. Но только при одном условии.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Думаю, что да. Но только при одном условии.{/glitch}{/size}"
     "Девушка посмотрела на меня хитрым взглядом и ехидно усмехнулась."
-    ghost "{size=60}{glitch=60}Ты должен выполнить мои желания.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Ты должен выполнить мои желания.{/glitch}{/size}"
     menu:
         "{color=#000000}Маньяк убивает людей. Какие ещё, к черту, желания?{/color}":
-            ghost "{size=60}{glitch=60}Ну, ну, не горячись. Ты тоже меня пойми, я уже 6 лет торчу в этом лесу в полном одиночестве.{/glitch}{/size}"
-            ghost "{size=60}{glitch=60}Быть призраком не так уж и легко, знаешь ли.{/glitch}{/size}"
-            ghost "{size=60}{glitch=60}Я вообще не понимаю, как ты меня видишь и слышишь, ведь до этого меня никто не замечал{/glitch}{/size}"
+            ghost "{size=60}{glitch=45}Ну, ну, не горячись. Ты тоже меня пойми, я уже 6 лет торчу в этом лесу в полном одиночестве.{/glitch}{/size}"
+            ghost "{size=60}{glitch=45}Быть призраком не так уж и легко, знаешь ли.{/glitch}{/size}"
+            ghost "{size=60}{glitch=45}Я вообще не понимаю, как ты меня видишь и слышишь, ведь до этого меня никто не замечал{/glitch}{/size}"
             "Лицо девушки на мгновенье помрачнело"
-            ghost "{size=60}{glitch=60}Пойми, мне просто скучно. Я не могу уйти на покой. Сама не знаю почему.{/glitch}{/size}"
+            ghost "{size=60}{glitch=45}Пойми, мне просто скучно. Я не могу уйти на покой. Сама не знаю почему.{/glitch}{/size}"
             glgg "Ладно. Я выполню твои желания"
-            ghost "{size=60}{glitch=60}Урра! Спасибо тебе, [player_name]{/glitch}{/size}"
+            ghost "{size=60}{glitch=45}Урра! Спасибо тебе, [player_name]{/glitch}{/size}"
 
         "{color=#000000} Хорошо. Я согласен{/color}":
-            ghost "{size=60}{glitch=60}Ого. Я думала ты сразу же откажешься. Спасибо тебе, [player_name]{/glitch}{/size}"
+            ghost "{size=60}{glitch=45}Ого. Я думала ты сразу же откажешься. Спасибо тебе, [player_name]{/glitch}{/size}"
     
     glgg "Да не за что. Стоп. А откуда ты знаешь как меня зовут?"
-    ghost "{size=60}{glitch=60}Я же призрак. Я много чего знаю и умею.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Я же призрак. Я много чего знаю и умею.{/glitch}{/size}"
     "Девушка снова улыбнулась мне."
     glgg "Ну раз ты знаешь мое имя, то может скажешь мне свое?"
-    ghost "{size=60}{glitch=60}Меня зовут Юмико. Юмико Агава.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Меня зовут Юмико. Юмико Агава.{/glitch}{/size}"
     glgg "Что ж, приятно познакомиться, Юмико"
-    ghost "{size=60}{glitch=60}Знал бы ты, как мне приятно. [player_name]{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Знал бы ты, как мне приятно. [player_name]{/glitch}{/size}"
     "Мы потянули друг другу руки для рукопожатия, но рука моей новой знакомой прошла сквозь мою, от чего стало немного холодно."
-    ghost "{size=60}{glitch=60}Ты забыл? Я же призрак.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Ты забыл? Я же призрак.{/glitch}{/size}"
     "Я посмотрел на нее, потом на руку, потом опять на нее, и мы оба начали смеяться с этой нелепой ситуации."
     glgg "Ну так что, какие у тебя пожелания?"
-    ghost "{size=60}{glitch=60}Хмм, дай-ка подумать.{/glitch}{/size}"
-    ghost "{size=60}{glitch=60}Я хочу, чтобы ты купил мне пару новых платьев.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Хмм, дай-ка подумать.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Я хочу, чтобы ты купил мне пару новых платьев.{/glitch}{/size}"
     glgg "Чего..."
-    ghost "{size=60}{glitch=60}Я же девушка и люблю красивые платья, вот и принеси мне их.{/glitch}{/size}"
-    ghost "{size=60}{glitch=60}Хоть с людьми я взаимодейстовать и не могу, но вот с некоторыми предметами у меня немного получается{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Я же девушка и люблю красивые платья, вот и принеси мне их.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Хоть с людьми я взаимодейстовать и не могу, но вот с некоторыми предметами у меня немного получается{/glitch}{/size}"
     glgg "Ну хорошо, как скажешь."
     glgg "Есть какие-то предпочтения?"
-    ghost "{size=60}{glitch=60}Хммм...{/glitch}{/size}"
-    ghost "{size=60}{glitch=60}Выбери то, которое мне по твоему мнению подойдет.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Хммм...{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Выбери то, которое мне по твоему мнению подойдет.{/glitch}{/size}"
     "Юмико снова мило вам улыбнулась."
     glgg "Как скажешь."
-    ghost "{size=60}{glitch=60}Ну что ж, жду тебя завтра с платьями. Приходи ко мне ночью в 00 00.{/glitch}{/size}"
+    ghost "{size=60}{glitch=45}Ну что ж, жду тебя завтра с платьями. Приходи ко мне ночью в 00 00.{/glitch}{/size}"
     glgg "Хорошо, до завтра"
+    hide ggrltest with dissolve
     "Как только я попрощался с Юмико, она сразу же куда-то исчезла..."
     glgg "..."
     glgg "И что это было?"
 
     $ date_w_ghost = True
+    jump check_location
     
 
 
 
+label tarakan_speech_about_ghost2:
 
+    "Придя домой, я поспешил рассказать о том, что произошло со мной в лесу, своему другу, таракану"
+    glgg "Эй, тараканище!"
+    "..."
+    glgg "Таракан! Ты где?!"
+    tar_pers "Ну что, ты в лес ходил?"
+    glgg "Да, и мягко говоря... Я в шоке!"
+    tar_pers "Что?! Ты что-то узнал?"
+    glgg "Да там капец ваще, а не лес! Я испугался вообще-то! Там призрак блять, понимаешь?!"
+    tar_pers "Что? Какой ещё призрак? Ты можешь нормально объяснить?"
+    glgg "Короче, в лесу был призрак, девушки, я конечно испугался, но потом мы вышли на нормальный контакт."
+    glgg "По её словам, она жертва этого маньяка, которая не может упокоится и поэтому осталась в лесу."
+    tar_pers "Стой! Жертва маньяка... А как её зовут?"
+    glgg "Эм... Дай вспомнить... Юмико кажется..."
+    tar_pers "Юмико Агава?..."
+    "Таракан сказал это с некоторой печалью в голосе и я, конечно же, не мог этого не заметить"
+    glgg "Да, точно! Юмико Агава. Ты её знаешь?"
+    tar_pers "Это... Моя подруга. Была когда-то моей подругой... Потом куда-то пропала..."
+    "Я просто не понимал как мне реагировать на подобную информацию, но всё же попробовал выкрутиться из ситуации"
+    glgg "Кхм. Тараканчик, ты не переживай, я понимаю, ты скучаешь по ней. Думаю... Вы же можете встретится, так ведь?"
+    glgg "Ну я же с ней разговаривал, значит и ты сможешь!... Наверное..."
+    tar_pers "Сомневаюсь. Если бы она могла, давно нашла бы меня. Мне кажется, что она прикована к лесу"
+    glgg "Это как?"
+    tar_pers "Она не сможет покинуть лес, пока душа не упокоится"
+    glgg "Тогда ты сам можешь к ней сходить!"
+    tar_pers "Нет..."
+    glgg "Что? Почему?"
+    tar_pers "Прости, сейчас нет настроения говорить об этом. Давай потом..."
+    glgg "Но..."
+    tar_pers "У меня дела"
+    glgg "Да какие могут быть дела? Ты та-ра-кан, понимаешь? Та-ра-кан"
+    tar_pers "Хватит! Сказал потом, значит потом"
+
+
+    $ tar_speech_a_ghost = True
+
+    jump check_location
+    
 
 
 

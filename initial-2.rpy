@@ -2,7 +2,7 @@ init 900 python:
 
     initial_mod(
         "Taramania",
-        "0.0.8d",
+        "0.0.11d_test",
         "pon",
         "https://t.me/taramaniasg"
     )
@@ -179,26 +179,8 @@ label cringesuka456tarakan_dialog:
 
                 jump check_location
 
-            "{color=#000000} Проследи за...\n{size=21}{i}-1 респект таракана{/i}{/size}{/color}":
-                $ tarakan_respect -=1
-                label  spy_tar_npc:
-                    $ pers = int(renpy.input("id того, за кем следить...", default =_("1"), allow="1234567890", length=3))
-                    if number_npc <= 0 or number_npc >= number_npc_max:
-                        "неверный id персонажа"
-                        jump spy_tar_npc
-
-                $ test = pers
-                $ test = "npc" + str(test)
-
-                $ npc_loc = eval(test)['location_npc']
-                $ npc_name = eval(test)['npc_name']
-
-                glgg "Проследи за [npc_name]"
-                $ tar_loc = npc_loc
-
-                tar_pers "Слушаюсь, сударь"
-
-                jump check_location
+            "{color=#000000} Заглушка\n{size=21}{i}заглушка 2{/i}{/size}{/color}":
+                    "in processing"
 
 
     elif date_w_tarakan == False:

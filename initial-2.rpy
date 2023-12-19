@@ -163,7 +163,7 @@ label cringesuka456tarakan_dialog:
 
         tar_pers "Я к вашим услугам, [player_name]"
 
-        
+
         if tar_speech_a_ghost == True:
             menu:
 
@@ -435,7 +435,7 @@ label date_ghost_label:
     
 
 
-
+    # диалог с тараканом про призрака
 label tarakan_speech_about_ghost2:
 
     "Придя домой, я поспешил рассказать о том, что произошло со мной в лесу, своему другу, таракану"

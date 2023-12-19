@@ -96,6 +96,11 @@ init 900 python:
         "date_ghost_label"
     )
 
+    check_ivent(
+        "location_gg == 'home' and date_w_ghost == True"
+        "tarakan_speech_about_ghost"
+    )
+
 
 
 
@@ -130,6 +135,7 @@ init:
     define killer = Character(_("Маньяк"), color=Color("#f50505"), who_font= 'gui/fonts/calibri_bold.ttf')
 
     define ghost = Character(_("Призрак"), who_color="#f906d0ff", who_font='gui/fonts/calibri_bold.ttf')
+    image ggrltest = "image/ggrltest.png"
 
 
     $ id_npc = 'npc1048'
@@ -311,6 +317,7 @@ label date_ghost_label:
     "Я резко обернулся и увидел там..."
     #glgg "{sc=2}ПРИЗРАК?!{/sc}"
     glgg "ПРИЗРАК?!"
+    show ggrltest with dissolve
     "Передо мной парил в воздухе силуэт молодой девушки в белом платье. Ее черные, как ночь, глаза смотрели прямо мне в душу."
     ghost "{size=60}{glitch=60}Ты меня видишь?{/glitch}{/size}"
     glgg "ПРОШУ, НЕ УБИВАЙ!"
@@ -371,6 +378,7 @@ label date_ghost_label:
     glgg "Как скажешь."
     ghost "{size=60}{glitch=60}Ну что ж, жду тебя завтра с платьями. Приходи ко мне ночью в 00 00.{/glitch}{/size}"
     glgg "Хорошо, до завтра"
+    hide ggrltest with dissolve
     "Как только я попрощался с Юмико, она сразу же куда-то исчезла..."
     glgg "..."
     glgg "И что это было?"
@@ -380,7 +388,10 @@ label date_ghost_label:
 
 
 
+label tarakan_speech_about_ghost:
 
+    "Придя домой, я посешил"
+    glgg "Эй, тараканище"
 
 
 

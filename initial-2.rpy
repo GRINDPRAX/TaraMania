@@ -140,6 +140,8 @@ init:
 
     define ghost = Character(_("Призрак"), who_color="#f906d0ff", who_font='gui/fonts/calibri_bold.ttf')
 
+    define Doctor = Character(_("Доктор"), who_color="#06bcf9ff", who_font='gui/fonts/calibri_bold.ttf')
+
     image ggrltest = "modifications/TaraMania/images/_ggrltest.png"
 
 
@@ -178,19 +180,19 @@ label cringesuka456tarakan_dialog:
                     $ tarakan_can_diialog -= 1
 
                     menu:
-                    "{color=#000000} Поговорить о криминале{/color}":
+                        "{color=#000000} Поговорить о криминале{/color}":
 
-                        $ repl = renpy.random.choice(cr_facts)
-                        tar_pers "[repl]"
+                            $ repl = renpy.random.choice(cr_facts)
+                            tar_pers "[repl]"
 
-                        jump check_location
+                            jump check_location
 
-                    "{color=#000000} Поговорить о философии{/color}":
+                        "{color=#000000} Поговорить о философии{/color}":
 
-                        $ repl = renpy.random.choice(fil_citats)
-                        tar_pers "[repl]"
+                            $ repl = renpy.random.choice(fil_citats)
+                            tar_pers "[repl]"
 
-                        jump check_location
+                            jump check_location
 
 
 
@@ -213,19 +215,20 @@ label cringesuka456tarakan_dialog:
                     $ tarakan_can_diialog -= 1
 
                     menu:
-                    "{color=#000000} Поговорить о криминале{/color}":
 
-                        $ repl = renpy.random.choice(cr_facts)
-                        tar_pers "[repl]"
+                        "{color=#000000} Поговорить о криминале{/color}":
 
-                        jump check_location
+                            $ repl = renpy.random.choice(cr_facts)
+                            tar_pers "[repl]"
 
-                    "{color=#000000} Поговорить о философии{/color}":
+                            jump check_location
 
-                        $ repl = renpy.random.choice(fil_citats)
-                        tar_pers "[repl]"
+                        "{color=#000000} Поговорить о философии{/color}":
 
-                        jump check_location
+                            $ repl = renpy.random.choice(fil_citats)
+                            tar_pers "[repl]"
+
+                            jump check_location
 
                 
                 
@@ -327,7 +330,14 @@ label killer_date:
 
         # прописать дальше больничку
 
-        "больничный леёбл"
+        glgg "Охххх, как же все болит."
+        Doctor "не делай резких движений, и так чудо, что ты жив остался."
+        "Вспомнил."
+        "Тот уродец пырнул меня ножом."
+        glgg "Спасибо вам, Доктор"
+        Doctor "Если бы тебя не нашла та девушка, то ты бы уже умер от потери крови.Так что благодарить надо ее, а не меня."
+        
+        
 
         jump hospital_location
 
@@ -447,7 +457,7 @@ label tarakan_speech_about_ghost2:
     tar_pers "Что?! Ты что-то узнал?"
     glgg "Да там капец ваще, а не лес! Я испугался вообще-то! Там призрак блять, понимаешь?!"
     tar_pers "Что? Какой ещё призрак? Ты можешь нормально объяснить?"
-    glgg "Короче, в лесу был призрак, девушки, я конечно испугался, но потом мы вышли на нормальный контакт."
+    glgg "Короче, в лесу был призрак девушки, я конечно испугался, но потом мы вышли на нормальный контакт."
     glgg "По её словам, она жертва этого маньяка, которая не может упокоится и поэтому осталась в лесу."
     tar_pers "Стой! Жертва маньяка... А как её зовут?"
     glgg "Эм... Дай вспомнить... Юмико кажется..."

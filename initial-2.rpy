@@ -11,9 +11,14 @@ init 900 python:
     pers = 0 # temp переменная
 
 
-    date_w_ghost = False # знаком с приведением?
-    date_w_killer = False # знаком с киллером?
-    date_w_tarakan = False  # тут False должно быть   ---- знаком с тараканом?
+    taramania_state = 0
+    ''' 0 - не знает таракана
+    1 - знаком с тараканом
+    2 - знаком с маньяком
+    3 - таракан сказал пойти в лес
+    4 - знаком с призраком
+    5 - поговорил с тараканом о призраке'''
+
     tar_speech_a_ghost = False
 
 
@@ -76,32 +81,32 @@ init 900 python:
 
         # знакомство с тараканом
     check_ivent(
-        "location_gg == 'home' and date_w_tarakan == False and hour in [18, 19, 20, 21, 22, 23]",
+        "location_gg == 'home' and taramania_state == 0 and hour in [18, 19, 20, 21, 22, 23]",
         "new_neighborn"
     )
 
         # таракан рассказывает про призрака
     check_ivent(
-        "location_gg == 'home' and tar_loc == 'home' and date_w_killer == True  ",
+        "location_gg == 'home' and tar_loc == 'home' and taramania_state >= 2 True  ",
         "tarakan_speech_about_ghost"
     )
 
         # Знакомство с маньяком
     check_ivent(
-        "location_gg == 'park' and date_w_killer == False and hour in [23, 0, 1, 2, 3, 4]",
+        "location_gg == 'park' and taramania_state < 2 and hour in [23, 0, 1, 2, 3, 4]",
         "killer_date"
     )
 
         # знакомство с призраком
     check_ivent(
-        "location_gg == 'forest' and think_about_ghost == True and hour in [23, 0, 1, 2, 3, 4]",
+        "location_gg == 'forest' and taramania_state == 2 and hour in [23, 0, 1, 2, 3, 4]",
         "date_ghost_label"
     )
 
 
     #рассказывает таракану о девочке призраке
     check_ivent(
-        "location_gg == 'home' and date_w_ghost == True and tar_speech_a_ghost == False and tar_loc == 'home'",
+        "location_gg == 'home' and taramania_state == 3 and tar_loc == 'home'",
         "tarakan_speech_about_ghost2"
     )
 
@@ -161,12 +166,12 @@ init:
     # призыв таракана
 label cringesuka456tarakan_dialog:
 
-    if date_w_tarakan == True and tar_loc == 'home':
+    if taramania_state == 1 and tar_loc == 'home':
 
         tar_pers "Я к вашим услугам, [player_name]"
 
 
-        if tar_speech_a_ghost == True:
+        if taramania_state >= 3:
             menu:
 
                 "{color=#000000} Болтать\n{size=21}{i}+1 респект таракана{/i}{/size}{/color}":
@@ -239,7 +244,7 @@ label cringesuka456tarakan_dialog:
                         
                         
 
-    elif date_w_tarakan == False:
+    elif taramania_state == 0:
 
         "О каком таракане идёт речь?"
 
@@ -258,7 +263,7 @@ label cringesuka456tarakan_dialog:
 
     # знакомство с тараканом
 label tarakan_speech_about_killer:
-    $ date_w_tarakan = True
+    $ taramania_state = 1
 
 
     tar_pers "А хотя стой! Теперь моя очередь говорить."
@@ -286,7 +291,7 @@ label tarakan_speech_about_killer:
     # знакомство с маньяком в парке ночью
 label killer_date:
 
-    $ date_w_killer = True
+    $ taramania_state = 2
 
     "На мгновенье показалось, что за мной кто-то наблюдает, как вдруг я почувстовал острое лезвие у совего горла."
     killer "Пошевелишься - убью."
@@ -361,7 +366,7 @@ label tarakan_speech_about_ghost:
     tar_pers "Всё. Я ушёл. Не подкачай."
     jump home
 
-    $ think_about_ghost = True
+    $ taramania_state = 3
 
 
 
@@ -440,7 +445,7 @@ label date_ghost_label:
     glgg "..."
     glgg "И что это было?"
 
-    $ date_w_ghost = True
+    $ taramania_state = 4
     jump check_location
     
 
@@ -479,9 +484,10 @@ label tarakan_speech_about_ghost2:
     tar_pers "У меня дела"
     glgg "Да какие могут быть дела? Ты та-ра-кан, понимаешь? Та-ра-кан"
     tar_pers "Хватит! Сказал потом, значит потом"
+    "С этими словами таракан поспешил удалиться."
 
 
-    $ tar_speech_a_ghost = True
+    $ taramania_state = 5
 
     jump check_location
     

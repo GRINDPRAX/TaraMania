@@ -2,7 +2,7 @@ init 900 python:
 
     initial_mod(
         "Taramania",
-        "0.0.11d_test",
+        "0.0.12d",
         "pon",
         "https://t.me/taramaniasg"
     )

@@ -2,7 +2,7 @@ init 900 python:
 
     initial_mod(
         "Taramania",
-        "0.0.12d",
+        "0.0.13d",
         "pon",
         "https://t.me/taramaniasg"
     )
@@ -85,31 +85,37 @@ init 900 python:
         "new_neighborn"
     )
 
-        # таракан рассказывает про призрака
-    check_ivent(
-        "location_gg == 'home' and tar_loc == 'home' and taramania_state >= 2 True  ",
-        "tarakan_speech_about_ghost"
-    )
-
         # Знакомство с маньяком
     check_ivent(
         "location_gg == 'park' and taramania_state < 2 and hour in [23, 0, 1, 2, 3, 4]",
         "killer_date"
     )
 
+
+        # таракан рассказывает про призрака
+    check_ivent(
+        "location_gg == 'home' and tar_loc == 'home' and taramania_state >= 2 True  ",
+        "tarakan_speech_about_ghost"
+    )
+
+        
         # знакомство с призраком
     check_ivent(
-        "location_gg == 'forest' and taramania_state == 2 and hour in [23, 0, 1, 2, 3, 4]",
+        "location_gg == 'forest' and taramania_state == 3 and hour in [23, 0, 1, 2, 3, 4]",
         "date_ghost_label"
     )
 
 
     #рассказывает таракану о девочке призраке
     check_ivent(
-        "location_gg == 'home' and taramania_state == 3 and tar_loc == 'home'",
+        "location_gg == 'home' and taramania_state == 4 and tar_loc == 'home'",
         "tarakan_speech_about_ghost2"
     )
 
+    check_ivent(
+        "location_gg == 'forest' and taramania_state == 5",
+        "date_ghost_label2"
+    )
 
 
 
@@ -625,3 +631,56 @@ label new_neighborn_mod:
     $ minute += renpy.random.randint(5, 10)
 
     jump tarakan_speech_about_killer
+
+
+
+label date_ghost_label2:
+#разговор с призраком после того как гг купил палтье, в лесу уже сть кнопка позвать юмико (так же необходимое условие, чтобы время было с 00 00 до 4 00)
+    glgg "Юмико, ты здесь? "
+    ghost "{size=60}{glitch=45}Бу-у-у-у.{/glitch}{/size}"
+    glgg "А-А-А-А-А, БЛЯТЬ"
+    ghost "{size=60}{glitch=45}Ахахахаха.{/glitch}{/size}"
+    glgg "Я чуть не обосрался. Нахер ты так пугаешь?"
+    ghost "{size=60}{glitch=45}Чтобы жизнь малиной не казалась.{/glitch}{/size}"
+    "Девушка была явно в хорошем настроении"
+    ghost "{size=60}{glitch=45}Ты принес то, о чем я тебя просила?{/glitch}{/size}"
+#Крч смотри, я как думаю. Этот ивент типо будет каждый раз, пока чел не принесет платье. Если он принесет плвтье, то это я расписал, а если нет,
+#То схема как и у стальных нпс, типо поговорить о милом, поговоить о том, об этом, НО атрибута доверия здесь будет. Доверие только по ходу сюжета типо. С ней можно просто болтать
+#Дальше я пишу ветку, где гг принес платье
+    menu:
+        "{color=#000000}Да, держи. {/color}":
+            ghost "{size=60}{glitch=45}Ой, какое красивое!{/glitch}{/size}"
+            "Лицо Юмико засияло от радости. Ее глаза бегали из стороны в сторону, оглядывая новенькое платье."
+            "Закончив осмтаривать ваш подарок, она мкорыми глазами посмотрела на вас."
+            ghost "{size=60}{glitch=45}Спасибо большое, [player_name]{/glitch}{/size}"
+            glgg "Эй, ну ты чего?"
+            glgg "Харош воду тратить. Лучше платье мерий."
+            ghost "{size=60}{glitch=45}Хорошо.{/glitch}{/size}"
+            "Юмико вытерла слезы и улыбнулась вам"
+            ghost "{size=60}{glitch=45}Ты бы отвернулся для приличия.{/glitch}{/size}"
+            glgg "Ой, прости."
+            "Вы отвернулись в ожидании, когда девушка закончит переодеваться"
+            "..."
+            ghost "{size=60}{glitch=45}Я зончила. Можешь повернуться.{/glitch}{/size}"
+
+
+            "Я повернулся и увидел Юмико в [и тут короче название палтья, которое купил игрок]." #################################
+
+
+            glgg "Ты просто восхитительна..."
+            ghost "{size=60}{glitch=45}Правда?{/glitch}{/size}"
+            glgg "Я чуть дар речи не потерял."
+            ghost "{size=60}{glitch=45}Спасибо.{/glitch}{/size}"
+            
+            
+            
+
+            $ taramania_state = 6
+            ################ ПРОДОЛЖИТЬ №№№№№№№№№№№№№№№№№№№№№№№
+
+        "{color=#000000}Совсем забыл.{/color}":
+            "Надежда в глазах девушки-призрака резко угасла, и она немного помрачнела."
+            ghost "{size=60}{glitch=45}Ну ничего страшного.{/glitch}{/size}"
+            ghost "{size=60}{glitch=45}Только не забудь его в следующий раз. Уже нетерпиться примерить новое платье.{/glitch}{/size}"
+            glgg "Хорошо."
+        #  !!!И типо тут он просто с ней как со всеми нпсишками может пиздеть. О милом, о повседневоности и тд и тп. НО БЕЗ АТРИБУТА ДОВЕРИЯ!!!

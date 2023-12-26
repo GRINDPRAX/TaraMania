@@ -2,8 +2,8 @@ init 900 python:
 
     initial_mod(
         "Taramania",
-        "0.0.14dt",
-        "pon",
+        "0.0.14a",
+        "Тараканчики)",
         "https://t.me/taramaniasg"
     )
 
@@ -95,7 +95,7 @@ init 900 python:
 
         # таракан рассказывает про призрака
     check_ivent(
-        "location_gg == 'home' and tar_loc == 'home' and taramania_state >= 2 True  ",
+        "location_gg == 'home' and tar_loc == 'home' and taramania_state == 2 True  ",
         "tarakan_speech_about_ghost"
     )
 
@@ -350,6 +350,8 @@ label killer_date:
         Doctor "Если бы тебя не нашла та девушка, то ты бы уже умер от потери крови.Так что благодарить надо ее, а не меня."
         
         
+        "Недописано "
+        
 
         jump hospital_location
 
@@ -371,9 +373,11 @@ label tarakan_speech_about_ghost:
     glgg "Окей... Но тогда... Почему ночью?"
     tar_pers "Ночью маньяк ходит по парку в поиске жертвы, поэтому это самое безопасное для тебя время."
     tar_pers "Всё. Я ушёл. Не подкачай."
-    jump home
 
     $ taramania_state = 3
+    jump home
+
+    
 
 
 
@@ -685,3 +689,8 @@ label date_ghost_label2:
             ghost "{size=60}{glitch=45}Только не забудь его в следующий раз. Уже нетерпиться примерить новое платье.{/glitch}{/size}"
             glgg "Хорошо."
         #  !!!И типо тут он просто с ней как со всеми нпсишками может пиздеть. О милом, о повседневоности и тд и тп. НО БЕЗ АТРИБУТА ДОВЕРИЯ!!!
+    
+
+    "Дальше сюжет не прописан :("
+
+    jump check_location
